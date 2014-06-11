@@ -1,11 +1,5 @@
 library(reshape2)
 
-# load data
-setwd("Documents/Coursera/Data Science Specialization/Getting and Cleaning Data/getdata/")
-
-# extract feature labels (second column in file)
-features <- read.table("UCI HAR Dataset/features.txt")[, 2]
-
 # load actual "test" data sets
 x.test <- read.table("UCI HAR Dataset/test/X_test.txt")
 names(x.test) <- features
@@ -21,6 +15,9 @@ y.train <- read.table("UCI HAR Dataset/train/y_train.txt")
 names(y.train) <- "activity"
 subject.train <- read.table("UCI HAR Dataset/train/subject_train.txt")
 names(subject.train) <- "subject"
+
+# load feature labels (second column in file)
+features <- read.table("UCI HAR Dataset/features.txt")[, 2]
 
 # extract activity labels
 activity.labels <- read.table("UCI HAR Dataset/activity_labels.txt")
