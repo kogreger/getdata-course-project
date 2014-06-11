@@ -2,7 +2,7 @@ library(reshape2)
 
 # load actual "test" data sets
 x.test <- read.table("UCI HAR Dataset/test/X_test.txt")
-names(x.test) <- features
+names(x.test) <- make.names(features)
 y.test <- read.table("UCI HAR Dataset/test/y_test.txt")
 names(y.test) <- "activity"
 subject.test <- read.table("UCI HAR Dataset/test/subject_test.txt")
@@ -10,7 +10,7 @@ names(subject.test) <- "subject"
 
 # load actual "training" data sets
 x.train <- read.table("UCI HAR Dataset/train/X_train.txt")
-names(x.train) <- features
+names(x.train) <- make.names(features)
 y.train <- read.table("UCI HAR Dataset/train/y_train.txt")
 names(y.train) <- "activity"
 subject.train <- read.table("UCI HAR Dataset/train/subject_train.txt")
@@ -51,3 +51,9 @@ data_melt <- melt(data,
                   id = c("subject", "act.label"), 
                   measure.vars = cols.to.keep)
 tidy.data <- dcast(data_melt, subject + act.label ~ variable, mean)
+
+# provide descriptive variable names where meaningful
+### doesn't work ! ###
+names(tidy.data)[cols.to.keep] <- paste("Ave.", 
+                                        names(tidy.data)[cols.to.keep], 
+                                        sep = "")
