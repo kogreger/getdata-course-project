@@ -1,59 +1,57 @@
 library(reshape2)
-
-# load actual "test" data sets
-x.test <- read.table("UCI HAR Dataset/test/X_test.txt")
-names(x.test) <- make.names(features)
-y.test <- read.table("UCI HAR Dataset/test/y_test.txt")
-names(y.test) <- "activity"
-subject.test <- read.table("UCI HAR Dataset/test/subject_test.txt")
-names(subject.test) <- "subject"
-
-# load actual "training" data sets
-x.train <- read.table("UCI HAR Dataset/train/X_train.txt")
-names(x.train) <- make.names(features)
-y.train <- read.table("UCI HAR Dataset/train/y_train.txt")
-names(y.train) <- "activity"
-subject.train <- read.table("UCI HAR Dataset/train/subject_train.txt")
-names(subject.train) <- "subject"
+setwd("~/Documents/Coursera/Data Science Specialization/Getting and Cleaning Data/getdata-course-project")
 
 # load feature labels (second column in file)
 features <- read.table("UCI HAR Dataset/features.txt")[, 2]
 
-# extract activity labels
-activity.labels <- read.table("UCI HAR Dataset/activity_labels.txt")
-names(activity.labels) <- c("activity", "act.label")
+# load actual "test" data sets
+xtest <- read.table("UCI HAR Dataset/test/X_test.txt")
+# create descriptive and digestible column names
+names(xtest) <- gsub("\\.", "", make.names(features))
+ytest <- read.table("UCI HAR Dataset/test/y_test.txt")
+names(ytest) <- "activity"
+subjecttest <- read.table("UCI HAR Dataset/test/subject_test.txt")
+names(subjecttest) <- "subject"
 
-# check for equal object sizes
-nrow(x.test) == nrow(y.test) & nrow(y.test) == nrow(subject.test)
-nrow(x.train) == nrow(y.train) & nrow(y.train) == nrow(subject.train)
+# load actual "training" data sets
+xtrain <- read.table("UCI HAR Dataset/train/X_train.txt")
+# create descriptive and digestible column names
+names(xtrain) <- gsub("\\.", "", make.names(features))
+ytrain <- read.table("UCI HAR Dataset/train/y_train.txt")
+names(ytrain) <- "activity"
+subjecttrain <- read.table("UCI HAR Dataset/train/subject_train.txt")
+names(subjecttrain) <- "subject"
+
+# extract activity labels
+activitylabels <- read.table("UCI HAR Dataset/activity_labels.txt")
+names(activitylabels) <- c("activity", "actlabel")
 
 # combine single data sets into "test" and "train" data sets
-test <- cbind(x.test, y.test, subject.test)
-train <- cbind(x.train, y.train, subject.train)
+test <- cbind(xtest, ytest, subjecttest)
+train <- cbind(xtrain, ytrain, subjecttrain)
 
 # combine "test" and "train" data sets into overall "data" dataset
 data <- rbind(test, train)
 
 # reduce data set to subject, activity, and all columns 
 # containing "mean" or "std"
-cols.to.keep <- names(data)[grep("mean|std", names(data))]
+colstokeep <- names(data)[grep("mean|std", names(data))]
 data <- data[c("subject", 
-               "activity", cols.to.keep)]
+               "activity", colstokeep)]
 
 # merge descriptive activity names to overall data set
-data <- merge(data, activity.labels, by.x = "activity", by.y = "activity")
+data <- merge(data, activitylabels, by.x = "activity", by.y = "activity")
 
 
 
 # create second, independent tidy data set with average of each 
 # variable for each activity and each subject
-data_melt <- melt(data, 
-                  id = c("subject", "act.label"), 
-                  measure.vars = cols.to.keep)
-tidy.data <- dcast(data_melt, subject + act.label ~ variable, mean)
+datamelt <- melt(data,
+                 id = c("subject", "actlabel"),
+                 measure.vars = colstokeep)
+tidydata <- dcast(data_melt, subject + actlabel ~ variable, mean)
 
 # provide descriptive variable names where meaningful
 ### doesn't work ! ###
-names(tidy.data)[cols.to.keep] <- paste("Ave.", 
-                                        names(tidy.data)[cols.to.keep], 
-                                        sep = "")
+names(tidydata)[colstokeep] <- paste0("Ave.",
+                                      names(tidydata)[colstokeep])
