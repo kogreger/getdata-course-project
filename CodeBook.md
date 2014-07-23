@@ -17,7 +17,8 @@ Codebook for Tidy Accelerometer Data
 ............... WALKING_UPSTAIRS
 
 The following 79 fields contain the averaged data of the respective fields 
-according to the original codebook of the Samsung Galaxy S accelerometer data
+per subject and activity according to the original codebook of the Samsung 
+Galaxy S accelerometer data.
 ....... Type: numeric
 
 3 ... tBodyAccmeanX
