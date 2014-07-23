@@ -30,28 +30,28 @@ names(activitylabels) <- c("activity", "actlabel")
 test <- cbind(xtest, ytest, subjecttest)
 train <- cbind(xtrain, ytrain, subjecttrain)
 
-# combine "test" and "train" data sets into overall "data" dataset
+# (1) combine "test" and "train" data sets into overall "data" dataset
 data <- rbind(test, train)
 
-# reduce data set to subject, activity, and all columns 
-# containing "mean" or "std"
+# (2) reduce data set to subject, activity, and all columns 
+#     containing "mean" or "std"
 colstokeep <- names(data)[grep("mean|std", names(data))]
 data <- data[c("subject", 
                "activity", colstokeep)]
 
-# merge descriptive activity names to overall data set
-data <- merge(data, activitylabels, by.x = "activity", by.y = "activity")
+# (3) merge descriptive activity names to overall data set
+data <- merge(data, activitylabels)
 
+# (4) apply descriptive variable names and remove unnecessary column
+#     that was created when merging the activity labels
+names(data)[length(data)] <- "actlabel"
+data <- data[, !names(data) %in% c("V1")]
 
-
-# create second, independent tidy data set with average of each 
-# variable for each activity and each subject
+# (5) create second, independent tidy data set with average of each 
+#     variable for each activity and each subject
 datamelt <- melt(data,
                  id = c("subject", "actlabel"),
                  measure.vars = colstokeep)
-tidydata <- dcast(data_melt, subject + actlabel ~ variable, mean)
-
-# provide descriptive variable names where meaningful
-### doesn't work ! ###
-names(tidydata)[colstokeep] <- paste0("Ave.",
-                                      names(tidydata)[colstokeep])
+tidydata <- dcast(datamelt, subject + actlabel ~ variable, mean)
+# export to CSV file
+write.table(tidydata, "tidydata.txt", sep=",")
