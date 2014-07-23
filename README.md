@@ -10,7 +10,7 @@ The main R code for loading, processing and tidily exporting the Samsung Galaxy 
 1. loading required "reshape2" library and setting working directory
 2. loading feature names from file "features.txt" - the feature labels themselves live in the second column
 3. loading the test data from file "X_test.txt"
-4. removing possibly problematic characters from column names and making them more readble in the process by removing all "."s using gsub
+4. removing possibly problematic characters from column names and making them more readble in the process by removing all "."s using gsub and make.names
 5. loading activity information for test data from file "y_test.txt", and providing the data a more descriptive column name
 6. loading subject information for test data from file "subject_test.txt", and providing the data a more descriptive column name
 7. repeating steps 2-6 for the training data 
